@@ -1,19 +1,14 @@
-# Base image olarak Ubuntu kullanıyoruz
-FROM ubuntu:latest
+FROM ubuntu:20.04
 
-# Paket listesi güncellenir ve gerekli paketler yüklenir
-RUN apt-get update && apt-get install -y \
-    curl \
-    wget \
-    nodejs \
-    npm \
-    && apt-get clean
+# Install necessary packages
+RUN apt-get update && \
+apt-get install -y shellinabox && \
+apt-get install -y systemd && \
+apt-get clean && \
+rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN echo 'root:root' | chpasswd
+# Expose the web-based terminal port
+EXPOSE 4200
 
-# Web terminali için gerekli Node.js paketlerini yükleyelim
-RUN npm install -g wetty
-
-# Web terminalini root kullanıcısı ile çalıştırıyoruz
-CMD ["wetty", "--port", "7681", "--command", "bash"]
-
-# Web terminali port 7681 üzerinden erişilebilir olacak
-EXPOSE 7681
+# Start shellinabox
+CMD ["/usr/bin/shellinaboxd", "-t", "-s", "/:LOGIN"]
