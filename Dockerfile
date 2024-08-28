@@ -10,7 +10,12 @@ RUN apt-get update && apt-get install -y \
     git \
     libjson-c-dev \
     libwebsockets-dev \
+    tzdata \
     && apt-get clean
+
+# Zaman dilimini Avrupa olarak ayarlayın
+RUN ln -fs /usr/share/zoneinfo/Europe/Istanbul /etc/localtime \
+    && dpkg-reconfigure -f noninteractive tzdata
 
 # ttyd kaynak kodunu klonlayıp kurulum yapıyoruz
 RUN git clone https://github.com/tsl0922/ttyd.git /opt/ttyd \
