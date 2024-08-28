@@ -1,33 +1,19 @@
 # Base image olarak Ubuntu kullanıyoruz
-FROM ubuntu:20.04
+FROM ubuntu:latest
 
 # Paket listesi güncellenir ve gerekli paketler yüklenir
 RUN apt-get update && apt-get install -y \
     bash \
     curl \
-    build-essential \
-    cmake \
-    git \
-    libjson-c-dev \
-    libwebsockets-dev \
-    tzdata \
+    nodejs \
+    npm \
     && apt-get clean
 
-# Zaman dilimini Avrupa olarak ayarlayın
-RUN ln -fs /usr/share/zoneinfo/Europe/Istanbul /etc/localtime \
-    && dpkg-reconfigure -f noninteractive tzdata
+# Web terminali için gerekli Node.js paketlerini yükleyelim
+RUN npm install -g wetty
 
-# ttyd kaynak kodunu klonlayıp kurulum yapıyoruz
-RUN git clone https://github.com/tsl0922/ttyd.git /opt/ttyd \
-    && cd /opt/ttyd \
-    && mkdir build \
-    && cd build \
-    && cmake .. \
-    && make \
-    && make install
+# Web terminalini root kullanıcısı ile çalıştırıyoruz
+CMD ["wetty", "--port", "7681", "--command", "bash"]
 
-# ttyd komutunu root kullanıcısı ile çalıştırıyoruz
-CMD ["ttyd", "-p", "7681", "-u", "root", "/bin/bash"]
-
-# ttyd web terminali port 7681 üzerinden erişilebilir olacak
+# Web terminali port 7681 üzerinden erişilebilir olacak
 EXPOSE 7681
