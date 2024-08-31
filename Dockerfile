@@ -1,21 +1,25 @@
-# Base image olarak Ubuntu 20.04 kullanıyoruz
-FROM ubuntu:20.04
+# Use Ubuntu 22.04 as the base image
+FROM ubuntu:22.04
 
-# Zaman dilimi ayarlamaları ve gerekli paketlerin yüklenmesi
+# Install necessary packages
 RUN apt-get update && \
-    apt-get install -y \
-    curl \
-    wget \
-    nodejs \
-    npm \
-    && apt-get clean && \
+    apt-get install -y curl unzip && \
+    apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# `tty.js`'yi yüklemek için gerekli Node.js paketlerini yükleyelim
-RUN npm install -g tty.js
-EXPOSE 7681
-# `tty.js`'yi çalıştırmak için gerekli komut
-CMD ["tty.js", "--port", "7681", "--command", "bash"]
+# Install Node.js (required for Code Server)
+RUN curl -fsSL https://deb.nodesource.com/setup_14.x | bash - && \
+    apt-get install -y nodejs
 
-# Web terminali port 7681 üzerinden erişilebilir olacak
+# Install Code Server
+RUN curl -fsSL https://code-server.dev/install.sh | sh
 
+
+
+# Expose port for Code Server
+EXPOSE 8000
+
+
+
+# Start Code Server with customizations and Blue Light Theme
+CMD ["code-server", "--auth", "password", "--host", "0.0.0.0", "--bind-addr", "0.0.0.0:8000"]
