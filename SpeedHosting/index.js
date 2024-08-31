@@ -1,0 +1,1 @@
+consol.log("Speed Hosting hoşgeldiniz projeler tamamen gizli ve 7/24 aktiftir");
