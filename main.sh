@@ -1,0 +1,1 @@
+code-server --auth password --bind-addr 0.0.0.0:8000 /SpeedHosting/
