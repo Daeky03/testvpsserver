@@ -22,4 +22,4 @@ EXPOSE 8000
 
 
 # Start Code Server with customizations and Blue Light Theme
-CMD ["code-server", "--auth", "password", "--host", "0.0.0.0", "--bind-addr", "0.0.0.0:8000", "/SpeedHosting/"]
+CMD ["bash", "main.sh"]
